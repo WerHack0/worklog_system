@@ -7,6 +7,8 @@ import { UserService } from './user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './user/user.entity';
+import { UserInfo } from './user-info/user-info.entity';
+import { JwtStrategy } from './local.strategy';
 
 @Module({
   imports: [
@@ -23,12 +25,12 @@ import { User } from './user/user.entity';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [User],
+      entities: [User,UserInfo],
       synchronize:true,
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User,UserInfo])
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService, UserService, JwtStrategy],
 })
 export class AppModule {}

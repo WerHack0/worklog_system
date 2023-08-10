@@ -3,6 +3,7 @@ document.getElementById('login-form').addEventListener('submit', function(e){
 
     const username = document.getElementById('login').value;
     const password = document.getElementById('password').value;
+    
     console.log(username)
     fetch('http://localhost:3000/auth/login',{
         method: 'POST',
@@ -14,8 +15,14 @@ document.getElementById('login-form').addEventListener('submit', function(e){
     .then(response => response.json())
     .then(data =>{
         if(data.access_token){
+            console.log(data);
+            localStorage.setItem('token', data.access_token);
             alert('Zalogowano');
-        } else{
+            if(data.job_position === "admin"){
+                window.location.href = 'admin/admin_menu.html'
+            }else{
+            window.location.href = `menu.html`;}
+        }else{
             alert(data.message ||'Błąd logowania');
         }
     })
