@@ -1,25 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './user/user.entity';
 @Injectable()
 export class AppService {
   constructor(
     private userService: UserService,
+    
     private jwtService: JwtService,
   ) {}
-  async getAllClients(): Promise<User[]>{
-    return await this.userService.getAllClients();
+ 
+async getUserInfo(userId: number): Promise< any> {
+  return await this.userService.getUserInfo(userId);
 }
-async createUser(user: User): Promise<User>{
-  return await this.userService.createUser(user);
-}
+
   async validateUser(username: string, password: string): Promise<any>{
     const user = await this.userService.findOne(username);
-
+    console.log('User:', user); 
+  console.log('UserInfo:', user?.userInfo);
     return user && user.password === password
-  ? { access_token: this.jwtService.sign({ username: user.email, sub: user.ID }) }
+  ? { access_token: this.jwtService.sign({ username: user.email, sub: user.ID }), user_id: user.ID, job_position: user.userInfo.job_position }
   : { success: false, message: 'Błąd logowania' };
+  }
+  async validateUserByPayload(payload: any): Promise<any> {
+    const user = await this.userService.findOne(payload.username);
+    if (user) {
+      return { username: user.email, ID: user.ID};
+    }
+    throw new UnauthorizedException();
   }
 }
 
