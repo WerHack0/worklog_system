@@ -1,5 +1,6 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { todo } from 'node:test';
 
 @Controller('log')
 export class AppController {
@@ -10,3 +11,4 @@ export class AppController {
     return this.appService.createLog(log);
   }
 }
+
