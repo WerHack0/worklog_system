@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Lista Pracowników</title>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Lista Pracowników</h1>
+    <button class="btn btn-primary mb-3" id="add-worker">Dodaj Pracownika</button>
+    <div class="modal fade" id="addWorkerModal" tabindex="-1" role="dialog" aria-labelledby="addWorkerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addWorkerModalLabel">Dodaj Pracownika</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="add-worker-form">
+                <div class="form-group">
+                  <label for="name">Imię</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="surname">Nazwisko</label>
+                  <input type="text" class="form-control" id="surname" required>
+                </div>
+                <div class="form-group">
+                  <label for="job_position">Stanowisko</label>
+                  <input type="text" class="form-control" id="job_position" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Adres e-mail</label>
+                  <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Hasło</label>
+                  <input type="password" class="form-control" id="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="editWorkerModal" tabindex="-1" role="dialog" aria-labelledby="editWorkerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editWorkerModalLabel">Edytuj Pracownika</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="edit-worker-form">
+                <div class="form-group">
+                  <label for="name">Imię</label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="surname">Nazwisko</label>
+                  <input type="text" class="form-control" id="surname" required>
+                </div>
+                <div class="form-group">
+                  <label for="job_position">Stanowisko</label>
+                  <input type="text" class="form-control" id="job_position" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Adres e-mail</label>
+                  <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Hasło</label>
+                  <input type="password" class="form-control" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Aktualizuj</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+   
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Imię</th>
+          <th>Nazwisko</th>
+          <th>Stanowisko</th>
+          <th>Operacje</th>
+        </tr>
+      </thead>
+      <tbody id="workers-list">
+        <script src="admin_workers_list.js"></script>
+      </tbody>
+    </table>
+  </div>
