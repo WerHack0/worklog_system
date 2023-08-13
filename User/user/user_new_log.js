@@ -13,7 +13,7 @@ const months = [
   
     months.forEach((month, index) => {
       const option = document.createElement('option');
-      option.value = index + 1;  // Store the month number as the value (1-based)
+      option.value = index + 1;  
       option.textContent = month;
   
       if (index === currentMonth) {
@@ -32,7 +32,7 @@ function createNewRow() {
   
   row.innerHTML = `
     <td><input type="number" class="form-control" min="1" max="31"></td>
-    <td><input type="number" class="form-control" min="0"></td>
+    <td><input type="number" class="form-control" min="0" max="24"></td>
     <td><input type="text" class="form-control"></td>
     <td><button class="btn btn-success" onclick="saveRow(this)">Save</button></td>
   `;
@@ -58,20 +58,21 @@ function addLogRow(day, hours, task) {
 
 function saveRow(buttonElement) {
   const row = buttonElement.parentElement.parentElement;
-  const day = row.children[0].textContent;
-  const hours = row.children[1].textContent;
-  const task = row.children[2].textContent;
-
+  const day = row.children[0].querySelector('input').value;
+  const hours = row.children[1].querySelector('input').value;
+  const task = row.children[2].querySelector('input').value;
+  console.log(day, task)
   const log = {
-    user_id: YOUR_USER_ID, 
-    day: day,
+    //user_id: YOUR_USER_ID, 
+    user_id: 2,
+    day: parseInt(day),
     month: monthSelect.value,
     work_hours: hours,
     task: task
   };
-
+  console.log(log)
   
-  fetch('/log', {
+  fetch('http://localhost:3000/log', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
