@@ -24,7 +24,7 @@ if (!token) {
     const tileContainer = document.getElementById('tileContainer');
     let tilesHtml = ''
     if(data.job_position === "admin"){
-      //menu admin
+      //menu admin panel
       tilesHtml = `
         <div class="row">
           <div class="col-md-6">
