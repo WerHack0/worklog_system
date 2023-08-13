@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { todo } from 'node:test';
+import { Log } from './log/log.entity';
 
 @Controller('log')
 export class AppController {

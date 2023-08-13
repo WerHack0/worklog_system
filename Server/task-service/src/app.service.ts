@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { todo } from 'node:test';
 import { Repository } from 'typeorm';
+import { Log } from './log/log.entity';
 
 @Injectable()
 export class AppService {

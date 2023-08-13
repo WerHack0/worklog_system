@@ -16,9 +16,8 @@ async getUserInfo(userId: number): Promise< any> {
   async validateUser(username: string, password: string): Promise<any>{
     const user = await this.userService.findOne(username);
     console.log('User:', user); 
-  console.log('UserInfo:', user?.userInfo);
     return user && user.password === password
-  ? { access_token: this.jwtService.sign({ username: user.email, sub: user.ID }), user_id: user.ID, job_position: user.userInfo.job_position }
+  ? { access_token: this.jwtService.sign({ username: user.email, sub: user.ID }), user_id: user.ID }
   : { success: false, message: 'Błąd logowania' };
   }
   async validateUserByPayload(payload: any): Promise<any> {
