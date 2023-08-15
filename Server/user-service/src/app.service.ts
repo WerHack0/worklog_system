@@ -1,54 +1,84 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { Repository } from 'typeorm';
 import { UserInfo } from './user-info/user-info.entity';
-import { User } from './user/user.entity';
+import { Client, ClientTCP, Transport } from '@nestjs/microservices';
+import { CreatedUserDto } from './created-user-dto/created-user-dto';
+import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class AppService {
   constructor(
     @InjectRepository(UserInfo)
     private userInfoRepo: Repository<UserInfo>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
+
+  @Client({
+    transport: Transport.TCP,
+    options:{
+      host:'127.0.0.1',
+      port:4002,
+    }
+  })
+  private client: ClientTCP;
+  onModuleInit(){
+    this.client.connect();
+  }
+
   async getAllWorkers(): Promise<UserInfo[]>{
     return this.userInfoRepo.find();
   }
-  async createUser(userDto: any): Promise<User> {
-    const userInfo = new UserInfo();
-    userInfo.name = userDto.name;
-    userInfo.surname = userDto.surname;
-    userInfo.job_position = userDto.job_position;
-    const user = new User();
-    user.email = userDto.email;
-    user.password = userDto.password;
-    const savedUser = await this.userRepository.save(user);
-    userInfo.user_ID = savedUser.ID;
-    await this.userInfoRepo.save(userInfo);
-    return savedUser;
-}
-async getUser(id: number): Promise<User> {
-  const user = await this.userRepository.findOne({ where: { ID: id }, relations: ["userInfo"] });
-  if (!user) {
-    throw new Error('User not found');
+async getUserInfo(token: string){
+  console.log(token);
+  //usunięcie nagłówka Bearer
+  const actualToken = token.split('Bearer ')[1];
+  try{
+    const decodeToken = this.jwtService.verify(actualToken);
+    const userId = decodeToken.sub;
+    const user = await this.userInfoRepo.findOne({where: {user_ID: userId}});
+    if(!user){
+      throw new UnauthorizedException('Nieprawidłowy token - nie zwrocilo uzytkownika');
+    }
+    return user;
+  }catch(error){
+    throw new UnauthorizedException('Nieprawidłowy token', error);
   }
-  return user;
+  
 }
-async updateUser(id: number, userDto: any): Promise<User> {
-  const user = await this.userRepository.findOne({ where: { ID: id }, relations: ["userInfo"] });
+async updateUser(id: number, dto: any): Promise<any> {
+  const user = await this.userInfoRepo.findOne({where: {user_ID: id}});
   if (!user) {
-    throw new Error('User not found');
+    throw new NotFoundException('Użytkownik nie został znaleziony');
   }
-  console.log(user);
-  user.email = userDto.email;
-  user.password = userDto.password;
-  user.userInfo.name = userDto.name;
-  user.userInfo.surname = userDto.surname;
-  user.userInfo.job_position = userDto.job_position;
-  await this.userRepository.save(user);
-  await this.userInfoRepo.save(user.userInfo);
+  return this.userInfoRepo.save({ ...user, ...dto });
+}
+
+async createUser(userDto: any): Promise<number>{
+  const response = await this.client.send<{ID: number}, {email: string, password:string}>(
+    'create_user',
+    {
+      email: userDto.email,
+      password: userDto.password,
+    }
+  ).toPromise();
+  return response.ID
+}
+async saveUserInfo(userId: number, userDto: CreatedUserDto): Promise<UserInfo>{
+  const userInfo = new UserInfo();
+  userInfo.user_ID = userId;
+  userInfo.name = userDto.name;
+  userInfo.surname = userDto.surname;
+  userInfo.job_position = userDto.job_position;
+
+  return this.userInfoRepo.save(userInfo);
+}
+async getUserById(id: number): Promise<UserInfo> {
+  const user = await this.userInfoRepo.findOne({ where: { user_ID: id } });
+  if (!user) {
+      throw new NotFoundException('Użytkownik nie został znaleziony');
+  }
   return user;
 }
 }

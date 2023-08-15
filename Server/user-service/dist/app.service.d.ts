@@ -1,12 +1,17 @@
 import { Repository } from 'typeorm';
 import { UserInfo } from './user-info/user-info.entity';
-import { User } from './user/user.entity';
+import { CreatedUserDto } from './created-user-dto/created-user-dto';
+import { JwtService } from '@nestjs/jwt';
 export declare class AppService {
     private userInfoRepo;
-    private readonly userRepository;
-    constructor(userInfoRepo: Repository<UserInfo>, userRepository: Repository<User>);
+    private jwtService;
+    constructor(userInfoRepo: Repository<UserInfo>, jwtService: JwtService);
+    private client;
+    onModuleInit(): void;
     getAllWorkers(): Promise<UserInfo[]>;
-    createUser(userDto: any): Promise<User>;
-    getUser(id: number): Promise<User>;
-    updateUser(id: number, userDto: any): Promise<User>;
+    getUserInfo(token: string): Promise<UserInfo>;
+    updateUser(id: number, dto: any): Promise<any>;
+    createUser(userDto: any): Promise<number>;
+    saveUserInfo(userId: number, userDto: CreatedUserDto): Promise<UserInfo>;
+    getUserById(id: number): Promise<UserInfo>;
 }

@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserInfo } from './user-info/user-info.entity';
-import { User } from './user/user.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
+
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true}),
@@ -15,10 +17,23 @@ import { User } from './user/user.entity';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [User, UserInfo],
+      entities: [UserInfo],
       synchronize:true,
     }),
-    TypeOrmModule.forFeature([User, UserInfo])
+    TypeOrmModule.forFeature([UserInfo]),
+    JwtModule.register({
+      //dodać secret do zmiennych środowiskowych
+      secret: 'RG9JVEF1dGg',
+      signOptions:{expiresIn: '2h'} 
+    }),
+    ClientsModule.register([{
+      name: 'USER_AUTH',
+      transport: Transport.TCP,
+      options:{
+        host: '127.0.0.1',
+        port: 4002,
+      }
+    }]),
   ],
   controllers: [AppController],
   providers: [AppService],

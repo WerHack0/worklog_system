@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const created_user_dto_1 = require("./created-user-dto/created-user-dto");
+const microservices_1 = require("@nestjs/microservices");
 let AppController = exports.AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
@@ -22,47 +24,53 @@ let AppController = exports.AppController = class AppController {
     async getWorkersList() {
         return await this.appService.getAllWorkers();
     }
-    async getUser(id) {
-        return this.appService.getUser(id);
+    async getUserInfo(token) {
+        return this.appService.getUserInfo(token);
+    }
+    async updateUser(data) {
+        return this.appService.updateUser(data.id, data);
     }
     async createUser(userDto) {
-        const user = await this.appService.createUser(userDto);
-        const { userInfo, ...userWithoutUserInfo } = user;
-        return userWithoutUserInfo;
+        const userId = await this.appService.createUser(userDto);
+        const userInfo = await this.appService.saveUserInfo(userId, userDto);
+        return { ID: userId,
+            userInfo: userInfo };
     }
-    async updateUser(id, userDto) {
-        console.log("Aktualizacja");
-        return this.appService.updateUser(id, userDto);
+    async getUserById(id) {
+        return await this.appService.getUserById(id);
     }
 };
 __decorate([
-    (0, common_1.Get)('list'),
+    (0, microservices_1.MessagePattern)('get_users'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "getWorkersList", null);
 __decorate([
-    (0, common_1.Get)('user/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, microservices_1.MessagePattern)('get_user'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "getUser", null);
+], AppController.prototype, "getUserInfo", null);
 __decorate([
-    (0, common_1.Post)('user'),
-    __param(0, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)('update_user'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
+], AppController.prototype, "updateUser", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('create_user_info'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [created_user_dto_1.CreatedUserDto]),
+    __metadata("design:returntype", Promise)
 ], AppController.prototype, "createUser", null);
 __decorate([
-    (0, common_1.Post)('user/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
+    (0, microservices_1.MessagePattern)('get_user_info'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "updateUser", null);
+], AppController.prototype, "getUserById", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

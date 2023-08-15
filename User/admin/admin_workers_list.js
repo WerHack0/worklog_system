@@ -19,7 +19,7 @@ fetch('http://localhost:3000/list')
         });
       });
     }
-    fetch('http://localhost:3000/list')
+    fetch('http://localhost:3000/users')
       .then(response => response.json())
       .then(data => {
         const workersList = document.getElementById('workers-list');
@@ -43,7 +43,12 @@ fetch('http://localhost:3000/list')
     const showModalButton = document.getElementById('add-worker');
     const editModal = document.getElementById('editWorkerModal');
     const closeEditModalButtons = editModal.querySelectorAll('[data-dismiss="modal"]');
-
+    const editForm = document.getElementById('edit-worker-form');
+    editForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const workerId = editModal.getAttribute('data-id');
+        updateWorker(workerId);
+    });
     showModalButton.addEventListener('click', () => {
         modal.style.display = 'block';
         modal.classList.add('show');
@@ -88,7 +93,7 @@ form.addEventListener('submit', (event) => {
       password: form.querySelector('#password').value
     };
   
-    fetch('http://localhost:3000/user', {
+    fetch('http://localhost:3000/createUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -97,12 +102,10 @@ form.addEventListener('submit', (event) => {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.success) {
+      
         alert('Użytkownik dodany pomyślnie!');
         refreshWorkersList(); 
-      } else {
-        alert('Wystąpił błąd podczas dodawania użytkownika.');
-      }
+      
     })
     .catch(error => {
       console.error('Error:', error);
@@ -117,12 +120,13 @@ form.addEventListener('submit', (event) => {
     .then(worker => {
         console.log(worker)
         const modal = document.getElementById('editWorkerModal');
-        modal.querySelector('#name').value = worker.userInfo.name;
-        modal.querySelector('#surname').value = worker.userInfo.surname;
-        modal.querySelector('#job_position').value = worker.userInfo.job_position;
+        modal.querySelector('#name').value = worker.name;
+        modal.querySelector('#surname').value = worker.surname;
+        modal.querySelector('#job_position').value = worker.job_position;
         modal.querySelector('#email').value = worker.email;
         modal.querySelector('#password').value = '';
         console.log(modal);
+        modal.setAttribute('data-id', workerId);
         modal.style.display = 'block';
         modal.classList.add('show');
     });
@@ -138,7 +142,7 @@ function updateWorker(id) {
     };
 
     fetch(`http://localhost:3000/user/${id}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },

@@ -1,13 +1,14 @@
 import { AppService } from './app.service';
+import { CreatedUserDto } from './created-user-dto/created-user-dto';
 export declare class AppController {
     private readonly appService;
     constructor(appService: AppService);
     getWorkersList(): Promise<import("./user-info/user-info.entity").UserInfo[]>;
-    getUser(id: number): Promise<import("./user/user.entity").User>;
-    createUser(userDto: any): Promise<{
+    getUserInfo(token: string): Promise<import("./user-info/user-info.entity").UserInfo>;
+    updateUser(data: any): Promise<any>;
+    createUser(userDto: CreatedUserDto): Promise<{
         ID: number;
-        email: string;
-        password: string;
+        userInfo: import("./user-info/user-info.entity").UserInfo;
     }>;
-    updateUser(id: number, userDto: any): Promise<import("./user/user.entity").User>;
+    getUserById(id: number): Promise<import("./user-info/user-info.entity").UserInfo>;
 }
