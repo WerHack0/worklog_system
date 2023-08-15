@@ -115,6 +115,9 @@ npm run start
 
 Gdy wszystkie usługi zostaną włączone można przejść do :
 
-Dokumentacja administratora
 
-Dokumentacja pracownika
+## Manual
+
+[Manual administratora](https://github.com/WerHack0/worklog_system/blob/main/manual_admin.pdf)
+
+[Manual pracownika](https://github.com/WerHack0/worklog_system/blob/main/manual_user.pdf)
