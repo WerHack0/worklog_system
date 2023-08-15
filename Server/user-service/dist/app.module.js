@@ -13,7 +13,8 @@ const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_info_entity_1 = require("./user-info/user-info.entity");
-const user_entity_1 = require("./user/user.entity");
+const microservices_1 = require("@nestjs/microservices");
+const jwt_1 = require("@nestjs/jwt");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
@@ -26,10 +27,22 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.POSTGRES_USERNAME,
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DATABASE,
-                entities: [user_entity_1.User, user_info_entity_1.UserInfo],
+                entities: [user_info_entity_1.UserInfo],
                 synchronize: true,
             }),
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, user_info_entity_1.UserInfo])],
+            typeorm_1.TypeOrmModule.forFeature([user_info_entity_1.UserInfo]),
+            jwt_1.JwtModule.register({
+                secret: 'RG9JVEF1dGg=',
+                signOptions: { expiresIn: '2h' }
+            }),
+            microservices_1.ClientsModule.register([{
+                    name: 'USER_AUTH',
+                    transport: microservices_1.Transport.TCP,
+                    options: {
+                        host: '127.0.0.1',
+                        port: 4002,
+                    }
+                }]),],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

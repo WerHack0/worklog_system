@@ -21,8 +21,32 @@ let AppService = exports.AppService = class AppService {
     constructor(logRepo) {
         this.logRepo = logRepo;
     }
+    async getTasks(userId, month) {
+        return await this.logRepo.findBy({ user_id: userId, month: month });
+    }
+    async seedTask(userId, month) {
+        return await this.logRepo.update({ user_id: userId, month: month }, { seend: true });
+    }
     async createLog(log) {
         return await this.logRepo.save(log);
+    }
+    async getLogsStatus(userId) {
+        return await this.logRepo.findBy({ user_id: userId });
+    }
+    async getNewLogs() {
+        return this.logRepo.findBy({ seend: true, check: false });
+    }
+    async approveLog(logId) {
+        return this.logRepo.update(logId, { check: true });
+    }
+    async rejectLog(logId) {
+        return this.logRepo.update(logId, { seend: false, check: true });
+    }
+    async approveLogs(logIds) {
+        return this.logRepo.update({ id: (0, typeorm_2.In)(logIds) }, { check: true });
+    }
+    async rejectLogs(logIds) {
+        return this.logRepo.update({ id: (0, typeorm_2.In)(logIds) }, { seend: false, check: true });
     }
 };
 exports.AppService = AppService = __decorate([

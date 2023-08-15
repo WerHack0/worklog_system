@@ -1,27 +1,33 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-
+import { CreatedUserDto } from './created-user-dto/created-user-dto';
+import { MessagePattern } from '@nestjs/microservices';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('list')
+  @MessagePattern('get_users')
   async getWorkersList(){
     return await this.appService.getAllWorkers();
   }
-  @Get('user/:id')
-async getUser(@Param('id') id: number) {
-  return this.appService.getUser(id);
+  @MessagePattern('get_user')
+  async getUserInfo(token: string){
+    return this.appService.getUserInfo(token);
+  }
+  @MessagePattern('update_user')
+  async updateUser(data: any) {
+    return this.appService.updateUser(data.id, data);
 }
-  @Post('user')
-  async createUser(@Body() userDto: any) {
-    const user = await this.appService.createUser(userDto);
-    const { userInfo, ...userWithoutUserInfo } = user;
-    return userWithoutUserInfo;
+  @MessagePattern('create_user_info')
+  async createUser(@Body() userDto: CreatedUserDto) {
+    const userId = await this.appService.createUser(userDto);
+    const userInfo = await this.appService.saveUserInfo(userId, userDto);
+    return { ID: userId,
+    userInfo: userInfo };
   }
-  @Post('user/:id')
-  async updateUser(@Param('id') id: number, @Body() userDto: any) {
-    console.log("Aktualizacja")
-    return this.appService.updateUser(id, userDto);
-  }
+  @MessagePattern('get_user_info')
+  async getUserById(id: number) {
+    return await this.appService.getUserById(id);
+}
+
 }

@@ -7,17 +7,19 @@ import { UserService } from './user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './user/user.entity';
-import { UserInfo } from './user-info/user-info.entity';
 import { JwtStrategy } from './local.strategy';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     PassportModule,
+    
+    ConfigModule.forRoot({ isGlobal: true}),
     JwtModule.register({
-      secret: 'RG9JVEF1dGg=',
+      
+      secret: process.env.JWT_SECRET,
       signOptions:{expiresIn: '2h'}
     }),
-    ConfigModule.forRoot({ isGlobal: true}),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -25,10 +27,18 @@ import { JwtStrategy } from './local.strategy';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [User,UserInfo],
+      entities: [User],
       synchronize:true,
     }),
-    TypeOrmModule.forFeature([User,UserInfo])
+    TypeOrmModule.forFeature([User]),
+    ClientsModule.register([{
+      name: 'USER_SERVICE',
+      transport: Transport.TCP,
+      options:{
+        host: '127.0.0.1',
+        port: 4001,
+      }
+    }]),
   ],
   controllers: [AppController],
   providers: [AppService, UserService, JwtStrategy],
