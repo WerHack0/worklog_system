@@ -1,10 +1,5 @@
 {
   "name": "auth-component",
   "version": "1.0.0",
-  "author": "Your Name <email@example.com>",
-  "dependencies": {
-    "my-awesome-package": "1.0.0",
-    "dep1": "1.2.0",
-    "nodep1": "1.0.0"
-  }
+  "author": "Your Name <email@example.com>"
 }
