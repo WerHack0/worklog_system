@@ -1,5 +1,10 @@
 {
-  "name": "my-awesome-package",
+  "name": "my-product",
   "version": "1.0.0",
-  "author": "Your Name <email@example.com>"
+  "author": "Your Name <email@example.com>",
+  "dependencies": {
+    "my-awesome-package": "1.0.0",
+    "dep1": "1.2.0",
+    "nodep1": "1.0.0"
+  }
 }
