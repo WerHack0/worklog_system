@@ -1,5 +1,10 @@
 {
-  "name": "testest",
+  "name": "be-service-test",
   "version": "1.0.0",
-  "author": "Your Name <email@example.com>"
+  "author": "Your Name <email@example.com>",
+  "dependencies": {
+    "my-awesome-package": "1.0.0",
+    "cam-component": "1.0.0",
+    "auth-component": "1.0.0"
+  }
 }
