@@ -1,5 +1,8 @@
 {
-  "name": "db-component",
-  "version": "2.5.0",
-  "author": "Your Name <email@example.com>"
+  "name": "cam-component",
+  "version": "1.0.0",
+  "author": "Your Name <email@example.com>",
+  "dependencies": {
+    "db-component": "2.5.0"
+  }
 }
