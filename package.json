@@ -1,6 +1,6 @@
 {
   "name": "be-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Your Name <email@example.com>",
   "dependencies": {
     "my-awesome-package": "1.0.0",
