@@ -1,6 +1,6 @@
 ## DoIT Worklog System.
 
-System do zarządzania pracą bazujący na mikroserwisach.
+System do zarządzania pracą bazujący na mikroserwisach.AAAAA
 ### Instalacja i Konfiguracja:
 Do porprawnego działania programu należy również zainstalować menadżer pakietów npm
 1. **Instalacja NestJS**:
