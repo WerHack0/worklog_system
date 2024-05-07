@@ -1,4 +1,4 @@
-## DoIT Worklog System
+## DoIT Worklog System.
 
 System do zarządzania pracą bazujący na mikroserwisach.
 ### Instalacja i Konfiguracja:
