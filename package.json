@@ -1,6 +1,6 @@
 {
   "name": "test_pord_dep_2",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "Your Name <email@example.com>",
   "dependencies": {
     "cam-component": "1.0.0",
