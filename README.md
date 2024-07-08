@@ -1,3 +1,3 @@
 ##Test-nowa-wersja!-ww
 
-Opis paczki
+Pierwszy opis
